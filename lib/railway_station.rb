@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# simple Station class
+# Simple Station class
 class RailwayStation
   attr_reader :name, :trains
 

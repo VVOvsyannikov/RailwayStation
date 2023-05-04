@@ -9,43 +9,46 @@ require_relative 'lib/cargo_wagon'
 require_relative 'lib/passenger_wagon'
 require_relative 'lib/route'
 
+# User interface class
 class Main
   attr_reader :stations
 
   def initialize
     @stations = []
     @trains = []
-
-    @actions = {
-      1 => :add_new_railway_station,
-      2 => :create_new_train,
-      3 => :add_wagons,
-      4 => :pop_wagons,
-      5 => :set_train_to_station,
-      6 => :stations_list,
-      7 => :break_program
-    }
-
-    @types = {
-      1 => 'cargo',
-      2 => 'passenger'
-    }
   end
+
+  MENU = "Выберите действие, которое хотите осуществить (введите число):\n" \
+      "1. Создать новую станцию\n" \
+      "2. Создать новый поезд\n" \
+      "3. Добавить вагоны к поезду\n" \
+      "4. Отцепить вагоны от поезда\n" \
+      "5. Переместить поезд на станцию\n" \
+      "6. Просмотреть список станций и список поездов на станции\n" \
+      '7. Завершить программу'
+
+  ACTIONS = {
+    1 => :add_new_railway_station,
+    2 => :create_new_train,
+    3 => :add_wagons,
+    4 => :pop_wagons,
+    5 => :set_train_to_station,
+    6 => :stations_list,
+    7 => :break_program
+  }.freeze
+
+  TYPES = {
+    1 => 'cargo',
+    2 => 'passenger'
+  }.freeze
 
   def start
     loop do
-      puts 'Выберите действие, которое хотите осуществить (введите число):'
-      puts '1. Создать новую станцию'
-      puts '2. Создать новый поезд'
-      puts '3. Добавить вагоны к поезду'
-      puts '4. Отцепить вагоны от поезда'
-      puts '5. Переместить поезд на станцию'
-      puts '6. Просмотреть список станций и список поездов на станции'
-      puts '7. Завершить программу'
+      puts MENU
 
       input = gets.chomp.to_i
 
-      send @actions[input]
+      send ACTIONS[input]
     end
   end
 
@@ -71,7 +74,7 @@ class Main
 
     type = gets.chomp.to_i
 
-    class_name = "#{@types[type].capitalize}Train"
+    class_name = "#{TYPES[type].capitalize}Train"
 
     @trains << Object.const_get(class_name).new(number)
   end
