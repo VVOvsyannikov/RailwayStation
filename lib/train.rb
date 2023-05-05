@@ -1,13 +1,33 @@
 # frozen_string_literal: true
+require_relative 'company_name'
 
 # Simple Train class
 class Train
+  include CompanyName
+  include InstanceCounter
+
   attr_reader :wagons, :speed, :type, :number
+
+  class << self
+    def find(train_number)
+      @trains.find { |train| train.number == train_number }
+    end
+
+    def trains
+      @trains ||= []
+    end
+  end
 
   def initialize(number, wagons = [])
     @number = number
     @speed = 0
     @wagons = wagons
+    collect_trains
+    register_instance
+  end
+
+  def collect_trains
+    self.class.trains << self
   end
 
   def accelerate

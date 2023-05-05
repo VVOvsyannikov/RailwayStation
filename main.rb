@@ -8,6 +8,7 @@ require_relative 'lib/wagon'
 require_relative 'lib/cargo_wagon'
 require_relative 'lib/passenger_wagon'
 require_relative 'lib/route'
+require_relative 'lib/company_name'
 
 # User interface class
 class Main
