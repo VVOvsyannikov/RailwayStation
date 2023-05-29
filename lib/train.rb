@@ -89,12 +89,16 @@ class Train
     @route.route[@station_index].add_train(self)
   end
 
+  def wagons_each(&block)
+    @wagons.each { |wagon| block.call(wagon) }
+  end
+
   private
 
   def validate!
     raise StandardError, "Number can't be nil" if number.nil?
     raise StandardError, 'Number has invalid format' if number !~ /^([a-z]{3}|[0-9]{3})-?([a-z]{2}|[0-9]{2})$/i
-    raise StandardError, "Такой номер уже существует" if self.class.trains.any? && self.class.find(number)
+    raise StandardError, 'Такой номер уже существует' if self.class.trains.any? && self.class.find(number)
 
     true
   end
