@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'company_name'
 
 # Simple Train class
@@ -22,8 +23,15 @@ class Train
     @number = number
     @speed = 0
     @wagons = wagons
+    validate!
     collect_trains
     register_instance
+  end
+
+  def valid?
+    validate!
+  rescue StandardError
+    false
   end
 
   def collect_trains
@@ -40,7 +48,7 @@ class Train
   end
 
   def attach_wagon(wagon)
-    return false if wagon.type != type
+    raise StandardError, 'Тип вагона не соотвествует типу поезда' if wagon.type != type
 
     @wagons << wagon if speed.zero?
   end
@@ -56,7 +64,7 @@ class Train
   end
 
   def current_station
-    @route.nil? ? nil : @route[@station_index]
+    @rwagonoute.nil? ? nil : @route[@station_index]
   end
 
   def next_station
@@ -79,5 +87,19 @@ class Train
     @route = route
     @station_index = 0
     @route.route[@station_index].add_train(self)
+  end
+
+  def wagons_each(&block)
+    @wagons.each { |wagon| block.call(wagon) }
+  end
+
+  private
+
+  def validate!
+    raise StandardError, "Number can't be nil" if number.nil?
+    raise StandardError, 'Number has invalid format' if number !~ /^([a-z]{3}|[0-9]{3})-?([a-z]{2}|[0-9]{2})$/i
+    raise StandardError, 'Такой номер уже существует' if self.class.trains.any? && self.class.find(number)
+
+    true
   end
 end
