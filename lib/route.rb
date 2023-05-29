@@ -2,12 +2,23 @@
 
 # Simple Route class
 class Route
-  attr_reader :route
+  attr_reader :route, :name
 
-  def initialize(first_station, final_station)
-    raise 'Станция должна быть строкой' if !first_station.is_a?(RailwayStation) || !final_station.is_a?(RailwayStation)
+  NAME_FORMAT = /^[а-яa-z]{3}$/i
 
-    @route = [first_station, final_station]
+  def initialize(name, first_station, final_station)
+    @first_station = first_station
+    @final_station = final_station
+    @name = name
+
+    validate!
+    @route = [@first_station, @final_station]
+  end
+
+  def valid?
+    validate!
+  rescue StandardError
+    false
   end
 
   def add_station(station)
@@ -20,5 +31,18 @@ class Route
 
   def stations_list
     route.each { |station| puts station.inspect }
+  end
+
+  private
+
+  def validate!
+    if !@first_station.is_a?(RailwayStation) || !@final_station.is_a?(RailwayStation)
+      raise StandardError,
+            'Станция должна быть объектом Железнодорожная станция'
+    end
+
+    raise StandardError, 'Ошибка! формат названия маршрута: три буквы' if name !~ NAME_FORMAT
+
+    true
   end
 end

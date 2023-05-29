@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
+# counter of instances method implementation
 module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
   end
 
+  # methods includes to Classes implementation
   module ClassMethods
     attr_writer :instances
 
