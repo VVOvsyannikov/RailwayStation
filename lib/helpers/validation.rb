@@ -6,15 +6,14 @@ module Validation
     base.extend ClassMethods
   end
 
-  def validate!(obj)
+  def validate!
     self.class.validations.each do |validation|
-      puts "start :#{validation[:type]} validation"
-      self.class.send(validation[:type], validation[:name], obj, validation[:args])
+      self.class.send(validation[:type], validation[:name], self, validation[:args])
     end
   end
 
   def valid?
-    return true if validate!(self)
+    return true if validate!
 
     false
   end
@@ -42,15 +41,11 @@ module Validation
     def presence(name, obj, _args)
       variable = obj.instance_variable_get("@#{name}")
       raise StandardError, 'Имя отсутствует' if variable.nil?
-
-      true
     end
 
     def format(name, obj, args)
       variable = obj.instance_variable_get("@#{name}")
       raise StandardError, "Не соответствует формат @#{name}" unless variable =~ args.first
-
-      false
     end
 
     def type(name, obj, args)
