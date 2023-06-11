@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 require_relative 'company_name'
+require_relative 'helpers/validation'
 
 # Simple Train class
 class Train
   include CompanyName
   include InstanceCounter
+  include Validation
 
   attr_reader :wagons, :speed, :type, :number
+
+  validate :number, :format, /^([a-z]{3}|[0-9]{3})-?([a-z]{2}|[0-9]{2})$/i
+  validate :number, :presence
 
   class << self
     def find(train_number)
@@ -95,11 +100,11 @@ class Train
 
   private
 
-  def validate!
-    raise StandardError, "Number can't be nil" if number.nil?
-    raise StandardError, 'Number has invalid format' if number !~ /^([a-z]{3}|[0-9]{3})-?([a-z]{2}|[0-9]{2})$/i
-    raise StandardError, 'Такой номер уже существует' if self.class.trains.any? && self.class.find(number)
-
-    true
-  end
+  # def validate!
+  #   # raise StandardError, "Number can't be nil" if number.nil?
+  #   # raise StandardError, 'Number has invalid format' if number !~ /^([a-z]{3}|[0-9]{3})-?([a-z]{2}|[0-9]{2})$/i
+  #   raise StandardError, 'Такой номер уже существует' if self.class.trains.any? && self.class.find(number)
+  #
+  #   true
+  # end
 end
